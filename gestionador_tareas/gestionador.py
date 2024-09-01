@@ -19,20 +19,17 @@ def cargar_tareas():
         print(f"Archivo de tareas no encontrado, se creara uno nuevo: {e}")
         return []
     except json.JSONDecodeError as e:
-        logging.error(f"Error al leer el archivo de tareas: {e}")
-        print(f"Error al leer el archivo de tareas: {e}")
+        logging.error(f"Error al leer el archivo de tareas, no existen datos en archivo JSON: {e}")
         return []
-    
-def guardar_tarea(tarea):
+
+def guardar_tareas(tareas):
     try:
-        tareas = cargar_tareas()
         with open(ARCHIVO_TAREAS, 'w') as file:
-            tareas.append(tarea)
             json.dump([t.to_dict() for t in tareas], file, indent=4)
-            logging.info("Tarea guardada correctamente.")
+            logging.info("Tareas guardadas correctamente.")
     except Exception as e:
-        logging.error(f"Error al guardar la tarea: {e}")
-        print(f"Error al guardar la tarea: {e}")
+        logging.error(f"Error al guardar las tareas: {e}")
+        print(f"Error al guardar las tareas: {e}")
 
 def crear_tarea(usuario):
     try:
@@ -48,14 +45,83 @@ def crear_tarea(usuario):
         tipo = obtener_etiqueta(etiquetas)
 
         tarea = Tarea(titulo, descr, fecha, tipo, usuario=usuario)
-        logging.info(f"Tarea creada por usuario {usuario}: {tarea.titulo}")
+        logging.info(f"Tarea '{tarea.titulo}' creada por el usuario {usuario}")
 
-        guardar_tarea(tarea)  # Guardar automáticamente después de crear
+        tareas = cargar_tareas()
+        tareas.append(tarea)
+        guardar_tareas(tareas)  # Guardar automáticamente después de crear
         print("Tarea creada y guardada con éxito.")
     except Exception as e:
         logging.error(f"Error al crear la tarea: {e}")
         print(f"Error: No se pudo crear la tarea. Verifique los datos ingresados: {e}")
         return None
+    
+def mostrar_tareas(tareas):
+    if not tareas:
+        print("No hay tareas disponibles.")
+        return
+    for i, tarea in enumerate(tareas, start=1):
+        print(f"\nTarea {i}:\n")
+        tarea.VerTarea()
+
+def actualizar_tarea(usuario):
+    tareas = cargar_tareas()
+    mostrar_tareas(tareas)
+    try:
+        seleccion = int(input("Ingrese el número de la tarea a actualizar: "))
+        if 1 <= seleccion <= len(tareas):
+            tarea = tareas[seleccion - 1]
+            print(f"Actualizando tarea '{tarea.titulo}'")
+            titulo = input(f"Nuevo título (dejar en blanco para mantener '{tarea.titulo}'): ") or tarea.titulo
+            descr = input(f"Nueva descripción (dejar en blanco para mantener '{tarea.descr}'): ") or tarea.descr
+            
+            # Actualizar la fecha de vencimiento si se proporciona una nueva
+            fecha_str = input(f"Nueva fecha de vencimiento (YYYY-MM-DD HH:MM) o presione Enter para mantener '{tarea.fecha}'): ")
+            fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d %H:%M') if fecha_str else tarea.fecha
+            
+            # Flag que indica si se cambia la etiqueta o no
+            tipo_f = input(f"¿Desea mantener la etiqueta (dejar en blanco) o cambiar la etiqueta (ingrese 1)?: ")
+            if tipo_f == "1":
+                etiquetas = cargar_etiquetas()
+                tipo = obtener_etiqueta(etiquetas)
+            else:
+                tipo = tarea.tipo
+            
+            estado_str = input("Ingrese el nuevo estado (1 para completada, 0 para en progreso, Enter para mantener el estado actual): ")
+            estado = int(estado_str) if estado_str else tarea.estado
+            
+            tarea.titulo = titulo
+            tarea.descr = descr
+            tarea.fecha = fecha
+            tarea.tipo = tipo
+            tarea.estado = estado
+            tarea.usuario = usuario
+
+            guardar_tareas(tareas)  # Guardar las tareas actualizadas
+            logging.info(f"Tarea '{tarea.titulo}' actualizada por el usuario {usuario}")
+            print("Tarea actualizada con éxito.")
+        else:
+            print("Número de tarea inválido.")
+    except ValueError:
+        print("Entrada inválida.")
+        logging.error("Error al actualizar la tarea: Entrada inválida.")
+
+def eliminar_tarea(usuario):
+    tareas = cargar_tareas()
+    mostrar_tareas(tareas)
+    try:
+        seleccion = int(input("Ingrese el número de la tarea a eliminar: "))
+        if 1 <= seleccion <= len(tareas):
+            tarea = tareas.pop(seleccion - 1)
+            logging.info(f"Tarea '{tarea.titulo}' eliminada por el usuario {usuario}")
+
+            guardar_tareas(tareas)  # Guardar la lista de tareas actualizada
+            print("Tarea eliminada con éxito.")
+        else:
+            print("Número de tarea inválido.")
+    except ValueError:
+        print("Entrada inválida.")
+        logging.error("Error al eliminar la tarea: Entrada inválida.")
 
 cuenta = Cuenta(
     usuario="Test",
@@ -67,6 +133,8 @@ print("Seleccione accion: ")
 print("1) Mostrar cuenta")
 print("2) Crear tarea")
 print("3) Mostrar tareas")
+print("4) Actualizar tarea")
+print("5) Eliminar tarea")
 print("Escriba el numero a seleccionar: ")
 eleccion = input()
 
@@ -76,7 +144,10 @@ elif eleccion == "2":
     crear_tarea(cuenta.usuario)
 elif eleccion == "3":
     tareas = cargar_tareas()
-    for tarea in tareas:
-        tarea.VerTarea()
+    mostrar_tareas(tareas)
+elif eleccion == "4":
+    actualizar_tarea(cuenta.usuario)
+elif eleccion == "5":
+    eliminar_tarea(cuenta.usuario)
 else:
     print("No existe tal accion!")
