@@ -64,12 +64,13 @@ class Tarea:
 class Cuenta:
     usuario: str
     nombre: str
-    #contrasena: str  #Puede ser inseguro agregar este campo directamente a la clase
+    contrasena: str
 
 
-    def __init__(self, usuario: str, nombre: str):
+    def __init__(self, usuario: str, nombre: str, contrasena: str):
         self.usuario = usuario
         self.nombre = nombre
+        self.contrasena = contrasena
 
     def ver_datos(self):
         print("Usuario: ", self.usuario)
