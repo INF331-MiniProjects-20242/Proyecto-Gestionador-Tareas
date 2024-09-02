@@ -33,13 +33,38 @@ def guardar_tareas(tareas):
 
 def crear_tarea(usuario):
     try:
-        titulo = input("Ingrese el título de la tarea: ")
-        descr = input("Ingrese la descripción de la tarea: ")
+        # Verificacion de titulo para que no exceda los 50 caracteres
+        while True:
+            titulo = input("Ingrese el título de la tarea: ")
+            if len(titulo) > 50:
+                print("El titulo debe contener a lo mas 50 caracteres, intenta nuevamente")
+            else:
+                break
+        # Verificacion de descripcion para que no exceda los 200 caracteres
+        while True:
+            descr = input("Ingrese la descripción de la tarea: ")
+            if len(descr) > 200:
+                print("La descripcion debe contener a los mas 200 caracteres, intenta nuevamente")
+            else:
+                break
 
         # Fecha por defecto 1 mes después de la fecha de creación o se puede ingresar manualmente
-        fecha_default = (datetime.datetime.now() + datetime.timedelta(days=30)).replace(hour=0, minute=0, second=0, microsecond=0)
-        fecha_str = input(f"Ingrese la fecha de vencimiento (YYYY-MM-DD HH:MM) o presione Enter para la fecha por defecto ({fecha_default}): ")
-        fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d %H:%M') if fecha_str else fecha_default
+        fecha_default = (datetime.date.today() + datetime.timedelta(days=30))
+        while True:
+            fecha_str = input(f"Ingrese la fecha de vencimiento (YYYY-MM-DD) o presione Enter para la fecha por defecto ({fecha_default}): ")
+            # Verificacion de fecha ingresada, si el formato entregado corresponde a una fecha posterior a la actual o si cumple el formato YYYY-MM-DD
+            if fecha_str:
+                try:
+                    fecha_val = datetime.datetime.strptime(fecha_str, '%Y-%m-%d').date()
+                    if fecha_val < datetime.date.today():
+                        print("Fecha ingresada no puede ser anterior a la actual, intenta nuevamente")
+                    else:
+                        break
+                except ValueError:
+                    print("Formato de fecha invalido, intenta nuevamente con el formato YYYY-MM-DD")
+            else:
+                break
+        fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d') if fecha_str else fecha_default
 
         etiquetas = cargar_etiquetas()
         tipo = obtener_etiqueta(etiquetas)
@@ -49,7 +74,9 @@ def crear_tarea(usuario):
 
         tareas = cargar_tareas()
         tareas.append(tarea)
-        guardar_tareas(tareas)  # Guardar automáticamente después de crear
+
+        # Guardado automatico despues de crear tarea
+        guardar_tareas(tareas)
         print("Tarea creada y guardada con éxito.")
     except Exception as e:
         logging.error(f"Error al crear la tarea: {e}")
@@ -72,12 +99,37 @@ def actualizar_tarea(usuario):
         if 1 <= seleccion <= len(tareas):
             tarea = tareas[seleccion - 1]
             print(f"Actualizando tarea '{tarea.titulo}'")
-            titulo = input(f"Nuevo título (dejar en blanco para mantener '{tarea.titulo}'): ") or tarea.titulo
-            descr = input(f"Nueva descripción (dejar en blanco para mantener '{tarea.descr}'): ") or tarea.descr
+            # Verificacion de titulo para que no exceda los 50 caracteres
+            while True:
+                titulo = input(f"Nuevo título (dejar en blanco para mantener '{tarea.titulo}'): ") or tarea.titulo
+                if len(titulo) > 50:
+                    print("El titulo debe contener a lo mas 50 caracteres, intenta nuevamente")
+                else:
+                    break
+                # Verificacion de descripcion para que no exceda los 200 caracteres
+            while True:
+                descr = input(f"Nueva descripción (dejar en blanco para mantener '{tarea.descr}'): ") or tarea.descr
+                if len(descr) > 200:
+                    print("La descripcion debe contener a los mas 200 caracteres, intenta nuevamente")
+                else:
+                    break
             
             # Actualizar la fecha de vencimiento si se proporciona una nueva
-            fecha_str = input(f"Nueva fecha de vencimiento (YYYY-MM-DD HH:MM) o presione Enter para mantener '{tarea.fecha}'): ")
-            fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d %H:%M') if fecha_str else tarea.fecha
+            while True:
+                fecha_str = input(f"Nueva fecha de vencimiento (YYYY-MM-DD HH:MM) o presione Enter para mantener '{tarea.fecha}'): ")
+                # Verificacion de fecha ingresada, si el formato entregado corresponde a una fecha posterior a la actual o si cumple el formato YYYY-MM-DD
+                if fecha_str:
+                    try:
+                        fecha_val = datetime.datetime.strptime(fecha_str, '%Y-%m-%d').date()
+                        if fecha_val < datetime.date.today():
+                            print("Fecha ingresada no puede ser anterior a la actual, intenta nuevamente")
+                        else:
+                            break
+                    except ValueError:
+                        print("Formato de fecha invalido, intenta nuevamente con el formato YYYY-MM-DD")
+                else:
+                    break
+            fecha = datetime.datetime.strptime(fecha_str, '%Y-%m-%d') if fecha_str else tarea.fecha
             
             # Flag que indica si se cambia la etiqueta o no
             tipo_f = input(f"¿Desea mantener la etiqueta (dejar en blanco) o cambiar la etiqueta (ingrese 1)?: ")
@@ -87,17 +139,14 @@ def actualizar_tarea(usuario):
             else:
                 tipo = tarea.tipo
             
-            estado_str = input("Ingrese el nuevo estado (1 para completada, 0 para en progreso, Enter para mantener el estado actual): ")
-            estado = int(estado_str) if estado_str else tarea.estado
-            
+            # Actualizacion atributos de tarea
             tarea.titulo = titulo
             tarea.descr = descr
             tarea.fecha = fecha
             tarea.tipo = tipo
-            tarea.estado = estado
-            tarea.usuario = usuario
 
-            guardar_tareas(tareas)  # Guardar las tareas actualizadas
+            # Guardar tarea actualizada 
+            guardar_tareas(tareas)
             logging.info(f"Tarea '{tarea.titulo}' actualizada por el usuario {usuario}")
             print("Tarea actualizada con éxito.")
         else:
@@ -135,8 +184,7 @@ print("2) Crear tarea")
 print("3) Mostrar tareas")
 print("4) Actualizar tarea")
 print("5) Eliminar tarea")
-print("Escriba el numero a seleccionar: ")
-eleccion = input()
+eleccion = input("Escriba el numero a seleccionar: ")
 
 if eleccion == "1":
     cuenta.ver_datos()
