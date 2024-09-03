@@ -4,10 +4,10 @@ import json
 from models import Tarea, Cuenta
 from etiquetas import *
 
-# Configuración de logging
-logging.basicConfig(filename='app.log', filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
+# Configuracion de logging
+logging.basicConfig(filename="app.log", filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-ARCHIVO_TAREAS = 'tareas.json'
+ARCHIVO_TAREAS = "tareas.json"
 
 def cargar_tareas():
     try:
@@ -15,8 +15,8 @@ def cargar_tareas():
             tareas_data = json.load(file)
             return [Tarea.from_dict(t) for t in tareas_data]
     except FileNotFoundError as e:
-        logging.warning(f"Archivo de tareas no encontrado, se creara uno nuevo: {e}")
-        print(f"Archivo de tareas no encontrado, se creara uno nuevo: {e}")
+        logging.warning(f"Archivo de tareas no encontrado, se creara uno nuevo al crear una nueva tarea: {e}")
+        print(f"Archivo de tareas no encontrado, se creara uno nuevo al crear una nueva tarea: {e}")
         return []
     except json.JSONDecodeError as e:
         logging.error(f"Error al leer el archivo de tareas, no existen datos en archivo JSON: {e}")
@@ -35,20 +35,20 @@ def crear_tarea(usuario):
     try:
         # Verificacion de titulo para que no exceda los 50 caracteres
         while True:
-            titulo = input("Ingrese el título de la tarea: ")
+            titulo = input("Ingrese el titulo de la tarea: ")
             if len(titulo) > 50:
                 print("El titulo debe contener a lo mas 50 caracteres, intenta nuevamente")
             else:
                 break
         # Verificacion de descripcion para que no exceda los 200 caracteres
         while True:
-            descr = input("Ingrese la descripción de la tarea: ")
+            descr = input("Ingrese la descripcion de la tarea: ")
             if len(descr) > 200:
                 print("La descripcion debe contener a los mas 200 caracteres, intenta nuevamente")
             else:
                 break
 
-        # Fecha por defecto 1 mes después de la fecha de creación o se puede ingresar manualmente
+        # Fecha por defecto 1 mes despues de la fecha de creacion o se puede ingresar manualmente
         fecha_default = (datetime.date.today() + datetime.timedelta(days=30))
         while True:
             fecha_str = input(f"Ingrese la fecha de vencimiento (YYYY-MM-DD) o presione Enter para la fecha por defecto ({fecha_default}): ")
@@ -77,7 +77,7 @@ def crear_tarea(usuario):
 
         # Guardado automatico despues de crear tarea
         guardar_tareas(tareas)
-        print("Tarea creada y guardada con éxito.")
+        print("Tarea creada y guardada con exito.")
     except Exception as e:
         logging.error(f"Error al crear la tarea: {e}")
         print(f"Error: No se pudo crear la tarea. Verifique los datos ingresados: {e}")
@@ -95,20 +95,20 @@ def actualizar_tarea(usuario):
     tareas = cargar_tareas()
     mostrar_tareas(tareas)
     try:
-        seleccion = int(input("Ingrese el número de la tarea a actualizar: "))
+        seleccion = int(input("Ingrese el numero de la tarea a actualizar: "))
         if 1 <= seleccion <= len(tareas):
             tarea = tareas[seleccion - 1]
             print(f"Actualizando tarea '{tarea.titulo}'")
             # Verificacion de titulo para que no exceda los 50 caracteres
             while True:
-                titulo = input(f"Nuevo título (dejar en blanco para mantener '{tarea.titulo}'): ") or tarea.titulo
+                titulo = input(f"Nuevo titulo (dejar en blanco para mantener '{tarea.titulo}'): ") or tarea.titulo
                 if len(titulo) > 50:
                     print("El titulo debe contener a lo mas 50 caracteres, intenta nuevamente")
                 else:
                     break
                 # Verificacion de descripcion para que no exceda los 200 caracteres
             while True:
-                descr = input(f"Nueva descripción (dejar en blanco para mantener '{tarea.descr}'): ") or tarea.descr
+                descr = input(f"Nueva descripcion (dejar en blanco para mantener '{tarea.descr}'): ") or tarea.descr
                 if len(descr) > 200:
                     print("La descripcion debe contener a los mas 200 caracteres, intenta nuevamente")
                 else:
@@ -148,30 +148,29 @@ def actualizar_tarea(usuario):
             # Guardar tarea actualizada 
             guardar_tareas(tareas)
             logging.info(f"Tarea '{tarea.titulo}' actualizada por el usuario {usuario}")
-            print("Tarea actualizada con éxito.")
+            print("Tarea actualizada con exito.")
         else:
-            print("Número de tarea inválido.")
+            print("Numero de tarea invalido.")
     except ValueError:
-        print("Entrada inválida.")
-        logging.error("Error al actualizar la tarea: Entrada inválida.")
+        print("Entrada invalida.")
+        logging.error("Error al actualizar la tarea: Entrada invalida.")
 
 def eliminar_tarea(usuario):
     tareas = cargar_tareas()
     mostrar_tareas(tareas)
     try:
-        seleccion = int(input("Ingrese el número de la tarea a eliminar: "))
+        seleccion = int(input("Ingrese el numero de la tarea a eliminar: "))
         if 1 <= seleccion <= len(tareas):
             tarea = tareas.pop(seleccion - 1)
             logging.info(f"Tarea '{tarea.titulo}' eliminada por el usuario {usuario}")
 
             guardar_tareas(tareas)  # Guardar la lista de tareas actualizada
-            print("Tarea eliminada con éxito.")
+            print("Tarea eliminada con exito.")
         else:
-            print("Número de tarea inválido.")
+            print("Numero de tarea invalido.")
     except ValueError:
-        print("Entrada inválida.")
-        logging.error("Error al eliminar la tarea: Entrada inválida.")
-
+        print("Entrada invalida.")
+        logging.error("Error al eliminar la tarea: Entrada invalida.")
 
 def main(cuenta):
     logging.info(f"El usuario {cuenta.usuario} ha entrado al gestionador de tareas.")
