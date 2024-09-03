@@ -177,25 +177,29 @@ cuenta = Cuenta(
     nombre="Testing_c"
 )
 
-print("Bienvenido al gestionador de tareas")
-print("Seleccione accion: ")
-print("1) Mostrar cuenta")
-print("2) Crear tarea")
-print("3) Mostrar tareas")
-print("4) Actualizar tarea")
-print("5) Eliminar tarea")
-eleccion = input("Escriba el numero a seleccionar: ")
+def main():
+    print("Bienvenido al gestionador de tareas")
+    print("Seleccione accion: ")
+    print("1) Mostrar cuenta")
+    print("2) Crear tarea")
+    print("3) Mostrar tareas")
+    print("4) Actualizar tarea")
+    print("5) Eliminar tarea")
+    eleccion = input("Escriba el numero a seleccionar: ")
 
-if eleccion == "1":
-    cuenta.ver_datos()
-elif eleccion == "2":
-    crear_tarea(cuenta.usuario)
-elif eleccion == "3":
-    tareas = cargar_tareas()
-    mostrar_tareas(tareas)
-elif eleccion == "4":
-    actualizar_tarea(cuenta.usuario)
-elif eleccion == "5":
-    eliminar_tarea(cuenta.usuario)
-else:
-    print("No existe tal accion!")
+    if eleccion == "1":
+        cuenta.ver_datos()
+    elif eleccion == "2":
+        crear_tarea(cuenta.usuario)
+    elif eleccion == "3":
+        tareas = cargar_tareas()
+        mostrar_tareas(tareas)
+    elif eleccion == "4":
+        actualizar_tarea(cuenta.usuario)
+    elif eleccion == "5":
+        eliminar_tarea(cuenta.usuario)
+    else:
+        print("No existe tal accion!")
+
+if __name__ == "__main__":
+    main()
