@@ -3,11 +3,10 @@ import json
 import logging
 from models import Tarea, Cuenta
 
-ARCHIVO_TAREAS = "tareas.json"
-LOG_FILE = "app.log"
-
 # Configuración de logging
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename="app.log", filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+ARCHIVO_TAREAS = "tareas.json"
 
 def cargar_tareas():
     tareas = []
