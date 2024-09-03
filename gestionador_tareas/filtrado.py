@@ -26,10 +26,6 @@ def cargar_tareas():
         logging.error(f"Error inesperado al cargar tareas: {e}")
     return tareas
 
-cuentas = Cuenta(
-    usuario="Test",
-    nombre="Testing_c"
-)
 
 def filtrar_por_rango_fechas(tareas, fecha_inicio, fecha_fin):
     try:
@@ -67,30 +63,40 @@ def mostrar_tareas(tareas):
     else:
         print("No hay tareas para mostrar.")
 
-tareas = cargar_tareas()
-print("Filtrado y busqueda de tareas")
-print("Seleccione accion: ")
-print("1) Filtrar tareas por fecha")
-print("2) Filtrar tareas por etiqueta")
-print("3) Filtrar tareas por estado")
-eleccion = input("Escriba el numero a seleccionar: ")
+cuentas = Cuenta(
+    usuario="Test",
+    nombre="Testing_c"
+)
 
-if eleccion == "1":
-    fecha_inicio = input("Ingrese la fecha de inicio (YYYY-MM-DD): ")
-    fecha_fin = input("Ingrese la fecha de fin (YYYY-MM-DD): ")
-    tareas_filtradas = filtrar_por_rango_fechas(tareas, fecha_inicio, fecha_fin)
-    mostrar_tareas(tareas_filtradas)
-elif eleccion == "2":
-    etiqueta = input("Ingrese la etiqueta para filtrar: ")
-    tareas_filtradas = filtrar_por_etiqueta(tareas, etiqueta)
-    mostrar_tareas(tareas_filtradas)
-elif eleccion == "3":
-    print("Seleccione el estado: 0) Pendiente 1) En progreso 2) Completada -1) Atrasada")
-    estado = input("Ingrese el estado de la tarea: ")
-    if estado in ["0", "1", "2", "-1"]:
-        tareas_filtradas = filtrar_por_estado(tareas, int(estado))
+
+def main():
+    tareas = cargar_tareas()
+    print("Filtrado y busqueda de tareas")
+    print("Seleccione accion: ")
+    print("1) Filtrar tareas por fecha")
+    print("2) Filtrar tareas por etiqueta")
+    print("3) Filtrar tareas por estado")
+    eleccion = input("Escriba el numero a seleccionar: ")
+
+    if eleccion == "1":
+        fecha_inicio = input("Ingrese la fecha de inicio (YYYY-MM-DD): ")
+        fecha_fin = input("Ingrese la fecha de fin (YYYY-MM-DD): ")
+        tareas_filtradas = filtrar_por_rango_fechas(tareas, fecha_inicio, fecha_fin)
         mostrar_tareas(tareas_filtradas)
+    elif eleccion == "2":
+        etiqueta = input("Ingrese la etiqueta para filtrar: ")
+        tareas_filtradas = filtrar_por_etiqueta(tareas, etiqueta)
+        mostrar_tareas(tareas_filtradas)
+    elif eleccion == "3":
+        print("Seleccione el estado:\n 0) Pendiente\n 1) En progreso\n 2) Completada\n-1) Atrasada")
+        estado = input("Ingrese el estado de la tarea: ")
+        if estado in ["0", "1", "2", "-1"]:
+            tareas_filtradas = filtrar_por_estado(tareas, int(estado))
+            mostrar_tareas(tareas_filtradas)
+        else:
+            print("Estado invalido, intenta nuevamente")
     else:
-        print("Estado invalido, intenta nuevamente")
-else:
-    print("No existe tal accion!")
+        print("No existe tal accion!")
+
+if __name__ == "__main__":
+    main()
