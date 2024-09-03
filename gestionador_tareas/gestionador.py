@@ -172,34 +172,39 @@ def eliminar_tarea(usuario):
         print("Entrada inválida.")
         logging.error("Error al eliminar la tarea: Entrada inválida.")
 
-cuenta = Cuenta(
-    usuario="Test",
-    nombre="Testing_c"
-)
 
-def main():
-    print("Bienvenido al gestionador de tareas")
-    print("Seleccione accion: ")
-    print("1) Mostrar cuenta")
-    print("2) Crear tarea")
-    print("3) Mostrar tareas")
-    print("4) Actualizar tarea")
-    print("5) Eliminar tarea")
-    eleccion = input("Escriba el numero a seleccionar: ")
-
-    if eleccion == "1":
-        cuenta.ver_datos()
-    elif eleccion == "2":
-        crear_tarea(cuenta.usuario)
-    elif eleccion == "3":
-        tareas = cargar_tareas()
-        mostrar_tareas(tareas)
-    elif eleccion == "4":
-        actualizar_tarea(cuenta.usuario)
-    elif eleccion == "5":
-        eliminar_tarea(cuenta.usuario)
-    else:
-        print("No existe tal accion!")
+def main(cuenta):
+    logging.info(f"El usuario {cuenta.usuario} ha entrado al gestionador de tareas.")
+    while True:
+        print("\nBienvenido al gestionador de tareas")
+        print("Seleccione accion:")
+        print("1) Mostrar cuenta")
+        print("2) Crear tarea")
+        print("3) Mostrar tareas")
+        print("4) Actualizar tarea")
+        print("5) Eliminar tarea")
+        print("6) Salir")
+        eleccion = input("Escriba el numero a seleccionar: ")
+        if eleccion == "1":
+            cuenta.ver_datos()
+        elif eleccion == "2":
+            crear_tarea(cuenta.usuario)
+        elif eleccion == "3":
+            tareas = cargar_tareas()
+            mostrar_tareas(tareas)
+        elif eleccion == "4":
+            actualizar_tarea(cuenta.usuario)
+        elif eleccion == "5":
+            eliminar_tarea(cuenta.usuario)
+        elif eleccion == "6":
+            logging.info(f"El usuario {cuenta.usuario} ha salido del gestionador de tareas.")
+            break
+        else:
+            print("No existe tal accion!")
 
 if __name__ == "__main__":
-    main()
+    cuenta = Cuenta(
+        usuario="Test",
+        nombre="Testing_c"
+    )
+    main(cuenta)
