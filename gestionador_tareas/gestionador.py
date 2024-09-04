@@ -261,7 +261,7 @@ if __name__ == "__main__":
         return True
     except Exception as e:
         print(f"Error durante el Menu de inicio: {e}")
-        generar_log(f"Error: {e}", "Error")
+        logging.error(f"Error durante el Menu de inicio: {e}", "Error")
 
 def desplegar_registro():
     try:
@@ -288,7 +288,7 @@ def desplegar_registro():
         print("La cuenta ha sido creada con exito!")
     except Exception as e:
         print(f"Error durante el registro: {e}")
-        generar_log(f"Error: {e}", "Error")
+        logging.error(f"Error durante el despliegue registro: {e}", "Error")
 
 
 def desplegar_login():
@@ -308,7 +308,7 @@ def desplegar_login():
             print("Usuario o contraseña equivocados, regresando al menu...")
     except Exception as e:
         print(f"Error durante el login: {e}")
-        generar_log(f"Error: {e}", "Error")
+        logging.error(f"Error durante el despliegue del login: {e}", "Error")
     return False
 
 #Aqui creo el archivo si no existe
