@@ -2,7 +2,7 @@ import datetime
 import logging
 from models import Cuenta
 from etiquetas import *
-from gestionador import cargar_tareas
+from archivador import cargar_tareas, cargar_tareas_archivadas
 
 # Configuracion de logging
 logging.basicConfig(filename="app.log", filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -89,6 +89,7 @@ def main(cuenta):
         print("5) Salir")
         eleccion = input("Escriba el numero a seleccionar: ")
         tareas, indices_tareas = cargar_tareas(cuenta.usuario)
+        tareas_archivadas, indices_archivados = cargar_tareas_archivadas(cuenta.usuario)
         if eleccion == "1":
             cuenta.ver_datos()
         elif eleccion == "2":
@@ -97,7 +98,8 @@ def main(cuenta):
                 fecha_fin = input("Ingrese la fecha de fin (YYYY-MM-DD): ")
                 if validacion_fecha(fecha_fin):
                     tareas_filtradas = filtrar_por_rango_fechas(tareas, indices_tareas, fecha_inicio, fecha_fin)
-                    mostrar_tareas(tareas_filtradas)
+                    tareas_filtradas_archivadas = filtrar_por_rango_fechas(tareas_archivadas, indices_archivados, fecha_inicio, fecha_fin)
+                    mostrar_tareas(tareas_filtradas + tareas_filtradas_archivadas)
                 else:
                     print("Formato de fecha invalido, intenta nuevamente con el formato YYYY-MM-DD")
             else:
@@ -106,13 +108,17 @@ def main(cuenta):
             etiquetas = cargar_etiquetas()
             etiqueta = obtener_etiqueta(etiquetas)
             tareas_filtradas = filtrar_por_etiqueta(tareas, indices_tareas, etiqueta)
-            mostrar_tareas(tareas_filtradas)
+            tareas_filtradas_archivadas = filtrar_por_etiqueta(tareas_archivadas, indices_archivados, etiqueta)
+            mostrar_tareas(tareas_filtradas + tareas_filtradas_archivadas)
         elif eleccion == "4":
             print("Seleccione el estado:\n 0) Pendiente\n 1) En progreso\n 2) Completada\n-1) Atrasada")
             estado = input("Ingrese el estado de la tarea: ")
-            if estado in ["0", "1", "2", "-1"]:
+            if estado in ["0", "1", "-1"]:
                 tareas_filtradas = filtrar_por_estado(tareas, indices_tareas, int(estado))
                 mostrar_tareas(tareas_filtradas)
+            elif estado == "2":
+                tareas_filtradas_archivadas = filtrar_por_estado(tareas_archivadas, indices_archivados, int(estado))
+                mostrar_tareas(tareas_filtradas_archivadas)
             else:
                 print("Estado invalido, intenta nuevamente")
         elif eleccion == "5":
