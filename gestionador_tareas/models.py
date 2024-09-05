@@ -42,6 +42,19 @@ class Tarea:
             "estado": self.estado,
             "usuario": self.usuario
         }
+    
+    def ver_estado(self):
+        if self.estado == 0:
+            msg_estado = "Pendiente"
+        elif self.estado == 1:
+            msg_estado = "En progreso..."
+        elif self.estado == 2:
+            msg_estado = "Completada!"
+        elif self.estado == -1:
+            msg_estado = "Atrasado"
+        else:
+            msg_estado = "None"
+        return msg_estado
 
     @staticmethod
     def from_dict(data):
