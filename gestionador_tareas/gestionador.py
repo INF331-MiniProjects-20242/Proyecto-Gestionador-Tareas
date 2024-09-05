@@ -3,6 +3,7 @@ import logging
 import json
 from models import Tarea, Cuenta
 from etiquetas import *
+from archivador import *
 
 # Configuracion de logging
 logging.basicConfig(filename="app.log", filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -199,7 +200,10 @@ def main(cuenta):
         print("3) Mostrar tareas")
         print("4) Actualizar tarea")
         print("5) Eliminar tarea")
-        print("6) Salir")
+        print("6) Actualizar estado de Tarea")
+        print("7) Mostrar Tareas Archivadas")
+        print("8) Eliminar Tarea Archivada")
+        print("9) Salir")
         eleccion = input("Escriba el numero a seleccionar: ")
         if eleccion == "1":
             cuenta.ver_datos()
@@ -214,6 +218,14 @@ def main(cuenta):
         elif eleccion == "5":
             eliminar_tarea(cuenta.usuario)
         elif eleccion == "6":
+            actualizar_estado_tarea(cuenta.usuario)
+        elif eleccion == "7":
+            archivados, indices_tareas = cargar_tareas_archivadas(cuenta.usuario)
+            if verificacion_tareas_indices(archivados, indices_tareas):
+                mostrar_tareas(archivados, indices_tareas)
+        elif eleccion == '8':
+            eliminar_archivados(cuenta.usuario)
+        elif eleccion == "9":
             logging.info(f"El usuario {cuenta.usuario} ha salido del gestionador de tareas.")
             break
         else:
