@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 from models import Tarea, Cuenta
+from etiquetas import *
 
 # Configuracion de logging
 logging.basicConfig(filename="app.log", filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -92,7 +93,8 @@ def main(cuenta):
             tareas_filtradas = filtrar_por_rango_fechas(tareas, fecha_inicio, fecha_fin)
             mostrar_tareas(tareas_filtradas)
         elif eleccion == "2":
-            etiqueta = input("Ingrese la etiqueta para filtrar: ")
+            etiquetas = cargar_etiquetas()
+            etiqueta = obtener_etiqueta(etiquetas)
             tareas_filtradas = filtrar_por_etiqueta(tareas, etiqueta)
             mostrar_tareas(tareas_filtradas)
         elif eleccion == "3":
