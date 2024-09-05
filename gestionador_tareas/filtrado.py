@@ -7,6 +7,16 @@ from gestionador import cargar_tareas
 # Configuracion de logging
 logging.basicConfig(filename="app.log", filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
+def validacion_fecha(fecha):
+    if fecha:
+        try:
+            datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
+            return True
+        except ValueError:
+            print("Formato de fecha invalido, intenta nuevamente con el formato YYYY-MM-DD")
+            return False
+    return False
+
 def filtrar_por_rango_fechas(tareas, indices_tareas, fecha_inicio, fecha_fin):
     try:
         fecha_inicio_obj = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
@@ -72,23 +82,32 @@ def main(cuenta):
     while True:
         print("\nFiltrado y busqueda de tareas")
         print("Seleccione accion: ")
-        print("1) Filtrar tareas por fecha")
-        print("2) Filtrar tareas por etiqueta")
-        print("3) Filtrar tareas por estado")
-        print("4) Salir")
+        print("1) Mostrar cuenta")
+        print("2) Filtrar tareas por fecha")
+        print("3) Filtrar tareas por etiqueta")
+        print("4) Filtrar tareas por estado")
+        print("5) Salir")
         eleccion = input("Escriba el numero a seleccionar: ")
         tareas, indices_tareas = cargar_tareas(cuenta.usuario)
         if eleccion == "1":
-            fecha_inicio = input("Ingrese la fecha de inicio (YYYY-MM-DD): ")
-            fecha_fin = input("Ingrese la fecha de fin (YYYY-MM-DD): ")
-            tareas_filtradas = filtrar_por_rango_fechas(tareas, indices_tareas, fecha_inicio, fecha_fin)
-            mostrar_tareas(tareas_filtradas)
+            cuenta.ver_datos()
         elif eleccion == "2":
+            fecha_inicio = input("Ingrese la fecha de inicio (YYYY-MM-DD): ")
+            if validacion_fecha(fecha_inicio):
+                fecha_fin = input("Ingrese la fecha de fin (YYYY-MM-DD): ")
+                if validacion_fecha(fecha_fin):
+                    tareas_filtradas = filtrar_por_rango_fechas(tareas, indices_tareas, fecha_inicio, fecha_fin)
+                    mostrar_tareas(tareas_filtradas)
+                else:
+                    print("Formato de fecha invalido, intenta nuevamente con el formato YYYY-MM-DD")
+            else:
+                print("Formato de fecha invalido, intenta nuevamente con el formato YYYY-MM-DD")
+        elif eleccion == "3":
             etiquetas = cargar_etiquetas()
             etiqueta = obtener_etiqueta(etiquetas)
             tareas_filtradas = filtrar_por_etiqueta(tareas, indices_tareas, etiqueta)
             mostrar_tareas(tareas_filtradas)
-        elif eleccion == "3":
+        elif eleccion == "4":
             print("Seleccione el estado:\n 0) Pendiente\n 1) En progreso\n 2) Completada\n-1) Atrasada")
             estado = input("Ingrese el estado de la tarea: ")
             if estado in ["0", "1", "2", "-1"]:
@@ -96,7 +115,7 @@ def main(cuenta):
                 mostrar_tareas(tareas_filtradas)
             else:
                 print("Estado invalido, intenta nuevamente")
-        elif eleccion == "4":
+        elif eleccion == "5":
             logging.info(f"El usuario {cuenta.usuario} ha salido del filtrador de tareas")
             break
         else:
