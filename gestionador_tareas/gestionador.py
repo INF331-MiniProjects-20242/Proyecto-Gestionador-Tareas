@@ -32,7 +32,6 @@ def cargar_tareas(usuario):
                     indices_tareas[j] = i
                     j += 1
             return tareas, indices_tareas
-
     except FileNotFoundError as e:
         logging.warning(f"Archivo de tareas no encontrado, se creara uno nuevo al crear una nueva tarea: {e}")
         print(f"Archivo de tareas no encontrado, se creara uno nuevo al crear una nueva tarea: {e}")
