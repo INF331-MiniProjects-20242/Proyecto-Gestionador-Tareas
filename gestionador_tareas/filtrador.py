@@ -34,9 +34,9 @@ def filtrar_por_rango_fechas(tareas, indices_tareas, fecha_inicio, fecha_fin):
                 filtradas.append(tarea)
         n_filtradas = len(filtradas)
         if n_filtradas == 1:
-            logging.info(f"Filtrada {len(filtradas)} tarea entre {fecha_inicio} y {fecha_fin}.")
+            logging.info(f"Filtrada {n_filtradas} tarea entre {fecha_inicio} y {fecha_fin}.")
         else:
-            logging.info(f"Filtradas {len(filtradas)} tareas entre {fecha_inicio} y {fecha_fin}.")
+            logging.info(f"Filtradas {n_filtradas} tareas entre {fecha_inicio} y {fecha_fin}.")
         return filtradas
     except ValueError as e:
         logging.error(f"Formato de fecha invalido para el filtrado: {e}")
@@ -64,9 +64,22 @@ def filtrar_por_estado(tareas, indices_tareas, estado):
             filtradas.append(tarea)
     n_filtradas = len(filtradas)
     if n_filtradas == 1:
-        logging.info(f"Filtrada {len(filtradas)} tarea con estado {estado}.")
+        logging.info(f"Filtrada {n_filtradas} tarea con estado {estado}.")
     else:
-        logging.info(f"Filtradas {len(filtradas)} tareas con estado {estado}.")
+        logging.info(f"Filtradas {n_filtradas} tareas con estado {estado}.")
+    return filtradas
+
+def filtrar_por_titulo(tareas, indices_tareas, titulo):
+    filtradas = []
+    for i in indices_tareas.values():
+        tarea = tareas[i]
+        if titulo.lower() in tarea.titulo.lower():
+            filtradas.append(tarea)
+    n_filtradas = len(filtradas)
+    if n_filtradas == 1:
+        logging.info(f"Filtrada {n_filtradas} tarea con titulo '{titulo}'")
+    else:
+        logging.info(f"Filtradas {n_filtradas} tareas con titulo '{titulo}'")
     return filtradas
 
 def mostrar_tareas(tareas):
@@ -86,7 +99,8 @@ def main(cuenta):
         print("2) Filtrar tareas por fecha")
         print("3) Filtrar tareas por etiqueta")
         print("4) Filtrar tareas por estado")
-        print("5) Salir")
+        print("5) Filtrar tareas por titulo")
+        print("6) Salir")
         eleccion = input("Escriba el numero a seleccionar: ")
         tareas, indices_tareas = cargar_tareas(cuenta.usuario)
         tareas_archivadas, indices_archivados = cargar_tareas_archivadas(cuenta.usuario)
@@ -122,6 +136,11 @@ def main(cuenta):
             else:
                 print("Estado invalido, intenta nuevamente")
         elif eleccion == "5":
+            titulo = input("Ingresa el titulo o parte del titulo de la tarea a buscar: ")
+            tareas_filtradas = filtrar_por_titulo(tareas, indices_tareas, titulo)
+            tareas_filtradas_archivadas = filtrar_por_titulo(tareas_archivadas, indices_archivados, titulo)
+            mostrar_tareas(tareas_filtradas + tareas_filtradas_archivadas)
+        elif eleccion == "6":
             logging.info(f"El usuario {cuenta.usuario} ha salido del filtrador de tareas")
             break
         else:
