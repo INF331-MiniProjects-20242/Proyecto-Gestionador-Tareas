@@ -19,8 +19,8 @@ def cargar_tareas_archivadas(usuario):
                     j += 1
             return archivados, indices_archivados
     except FileNotFoundError as e:
-        logging.warning(f"Archivo de tareas archivadas no encontrado, se creara uno nuevo al archivar una nueva tarea: {e}")
-        print(f"Archivo de tareas archivadas no encontrado, se creara uno nuevo al archivar una nueva tarea: {e}")
+        logging.warning(f"Archivo de tareas archivadas no encontrado, se creara uno nuevo: {e}")
+        guardar_tareas_archivadas([])
         return [], {}
     except json.JSONDecodeError as e:
         logging.error(f"Error al leer el archivo de tareas archivadas, no existen datos en archivo JSON: {e}")

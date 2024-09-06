@@ -33,8 +33,8 @@ def cargar_tareas(usuario):
                     j += 1
             return tareas, indices_tareas
     except FileNotFoundError as e:
-        logging.warning(f"Archivo de tareas no encontrado, se creara uno nuevo al crear una nueva tarea: {e}")
-        print(f"Archivo de tareas no encontrado, se creara uno nuevo al crear una nueva tarea: {e}")
+        logging.warning(f"Archivo de tareas no encontrado, se creara uno nuevo: {e}")
+        guardar_tareas([])
         return [], {}
     except json.JSONDecodeError as e:
         logging.error(f"Error al leer el archivo de tareas, no existen datos en archivo JSON: {e}")
