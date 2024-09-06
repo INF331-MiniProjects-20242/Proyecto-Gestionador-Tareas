@@ -1,6 +1,6 @@
 import logging
 import json
-from gestionador import cargar_tareas, verificacion_tareas_indices, mostrar_tareas, guardar_tareas
+import gestionador
 from models import Tarea
 
 ARCHIVADOR = "archivados.json"
@@ -19,8 +19,8 @@ def cargar_tareas_archivadas(usuario):
                     j += 1
             return archivados, indices_archivados
     except FileNotFoundError as e:
-        logging.warning(f"Archivo de tareas archivadas no encontrado, se creara uno nuevo al archivar una nueva tarea: {e}")
-        print(f"Archivo de tareas archivadas no encontrado, se creara uno nuevo al archivar una nueva tarea: {e}")
+        logging.warning(f"Archivo de tareas archivadas no encontrado, se creara uno nuevo: {e}")
+        guardar_tareas_archivadas([])
         return [], {}
     except json.JSONDecodeError as e:
         logging.error(f"Error al leer el archivo de tareas archivadas, no existen datos en archivo JSON: {e}")
@@ -45,9 +45,9 @@ def archivar_tarea(tarea, usuario):
         print(f"Error al archivar tarea: {e}")
 
 def actualizar_estado_tarea(usuario):
-    tareas, indices_tareas = cargar_tareas(usuario)
-    if verificacion_tareas_indices(tareas, indices_tareas):
-        mostrar_tareas(tareas, indices_tareas)
+    tareas, indices_tareas = gestionador.cargar_tareas(usuario)
+    if gestionador.verificacion_tareas_indices(tareas, indices_tareas):
+        gestionador.mostrar_tareas(tareas, indices_tareas)
         try:
             seleccion = int(input("Ingrese el numero de la tarea para actualizar estado: "))
             if 1 <= seleccion <= len(indices_tareas):
@@ -61,13 +61,13 @@ def actualizar_estado_tarea(usuario):
                     nuevo_estado = input(f"Ingrese el numero deseado para la tarea (actualmente el estado es: '{tarea.ver_estado()}'): ")
                     if nuevo_estado == "1":
                         tarea.estado = 0
-                        guardar_tareas(tareas)
+                        gestionador.guardar_tareas(tareas)
                         logging.info(f"Estado de la tarea '{tarea.titulo}' actualizado correctamente")
                         print("Estado de tarea actualizado correctamente!")
                         break
                     elif nuevo_estado == "2":
                         tarea.estado = 1
-                        guardar_tareas(tareas)
+                        gestionador.guardar_tareas(tareas)
                         logging.info(f"Estado de la tarea '{tarea.titulo}' actualizado correctamente")
                         print("Estado de tarea actualizado correctamente!")
                         break
@@ -82,7 +82,7 @@ def actualizar_estado_tarea(usuario):
                             if eleccion == "1":
                                 tarea = tareas.pop(indices_tareas[seleccion])
                                 logging.info(f"Estado de la Tarea '{tarea.titulo}' actualizada y eliminada por el usuario {usuario}")
-                                guardar_tareas(tareas)
+                                gestionador.guardar_tareas(tareas)
                                 print("Estado de la tarea actualizada y eliminada correctamente!")
                                 break
                             elif eleccion == "2":
@@ -90,7 +90,7 @@ def actualizar_estado_tarea(usuario):
                                 # Eliminar tarea de archivos tareas.json (solo en archivado)
                                 tarea = tareas.pop(indices_tareas[seleccion])
                                 logging.info(f"Estado de la Tarea '{tarea.titulo}' actualizada y archivada por el usuario {usuario}")
-                                guardar_tareas(tareas)
+                                gestionador.guardar_tareas(tareas)
                                 break
                             else:
                                 print("Accion invalida! intente nuevamente\n")
@@ -104,8 +104,8 @@ def actualizar_estado_tarea(usuario):
 
 def eliminar_archivados(usuario):
     archivados, indices_tareas = cargar_tareas_archivadas(usuario)
-    if verificacion_tareas_indices(archivados, indices_tareas):
-        mostrar_tareas(archivados, indices_tareas)
+    if gestionador.verificacion_tareas_indices(archivados, indices_tareas):
+        gestionador.mostrar_tareas(archivados, indices_tareas)
         try:
             seleccion = int(input("Ingrese el numero de la tarea archivada a eliminar: "))
             if 1 <= seleccion <= len(indices_tareas):

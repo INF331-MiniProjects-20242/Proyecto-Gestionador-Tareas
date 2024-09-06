@@ -3,7 +3,7 @@ import logging
 import json
 from models import Tarea, Cuenta
 from etiquetas import *
-from archivador import *
+import archivador
 
 # Configuracion de logging
 logging.basicConfig(filename="app.log", filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -33,8 +33,8 @@ def cargar_tareas(usuario):
                     j += 1
             return tareas, indices_tareas
     except FileNotFoundError as e:
-        logging.warning(f"Archivo de tareas no encontrado, se creara uno nuevo al crear una nueva tarea: {e}")
-        print(f"Archivo de tareas no encontrado, se creara uno nuevo al crear una nueva tarea: {e}")
+        logging.warning(f"Archivo de tareas no encontrado, se creara uno nuevo: {e}")
+        guardar_tareas([])
         return [], {}
     except json.JSONDecodeError as e:
         logging.error(f"Error al leer el archivo de tareas, no existen datos en archivo JSON: {e}")
@@ -217,13 +217,13 @@ def main(cuenta):
         elif eleccion == "5":
             eliminar_tarea(cuenta.usuario)
         elif eleccion == "6":
-            actualizar_estado_tarea(cuenta.usuario)
+            archivador.actualizar_estado_tarea(cuenta.usuario)
         elif eleccion == "7":
-            archivados, indices_tareas = cargar_tareas_archivadas(cuenta.usuario)
+            archivados, indices_tareas = archivador.cargar_tareas_archivadas(cuenta.usuario)
             if verificacion_tareas_indices(archivados, indices_tareas):
                 mostrar_tareas(archivados, indices_tareas)
         elif eleccion == '8':
-            eliminar_archivados(cuenta.usuario)
+            archivador.eliminar_archivados(cuenta.usuario)
         elif eleccion == "9":
             logging.info(f"El usuario {cuenta.usuario} ha salido del gestionador de tareas.")
             break
@@ -233,6 +233,7 @@ def main(cuenta):
 if __name__ == "__main__":
     cuenta = Cuenta(
         usuario="Test",
-        nombre="Testing_c"
+        nombre="Testing_c",
+        contrasena="***"
     )
     main(cuenta)
