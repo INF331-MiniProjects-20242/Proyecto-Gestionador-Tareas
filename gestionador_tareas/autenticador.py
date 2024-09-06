@@ -49,7 +49,7 @@ def verificar_cuenta(usuario: str, contrasena: str):
                     if verificar_contrasena(contrasena, registro["contrasena"]):
                         f.close()
                         logging.info(f"Cuenta de usuario {usuario} ingresada correctamente")
-                        return True #El usuario coloco contrasena y usuario correctamente
+                        return registro["usuario"], registro["nombre"] #El usuario coloco contrasena y usuario correctamente, se entrega el usuario y el nombre
         logging.warning(f"Inicio de sesion fallido para el usuario {usuario}")
         f.close()
     except Exception as e:
@@ -87,16 +87,14 @@ def desplegar_registro():
 def desplegar_login():
     try:
         print("\n--- Login ---")
-        print("Escriba su nombre de usuario: ")
-        usuario = input()
-        print("Escriba su contraseña: ")
-        contrasena = input()
+        usuario = input("Escriba su nombre de usuario: ")
+        contrasena = input("Escriba su contraseña: ")
 
         logea = verificar_cuenta(usuario, contrasena)
 
         if logea:
             print("\nLogin existoso!\n")
-            return True
+            return logea
         else:
             print("Usuario o contraseña equivocados, regresando al menu...")
     except Exception as e:
@@ -110,7 +108,7 @@ def main():
     f = open(archivo, 'a')
     f.close()
     logging.info("Se ha entrado al autenticador de cuentas.")
-    while True: 
+    while True:
         try:
             print("\nBienvenido al autenticador de cuentas")
             print("Seleccione accion: ")
@@ -119,10 +117,15 @@ def main():
             print("3) Salir")
             eleccion = input("Escriba el numero a seleccionar: ")
             if eleccion == "1":
-                desplegar_login()
+                login = desplegar_login()
+                if login:
+                    return Cuenta(
+                        usuario=login[0],
+                        nombre=login[1],
+                        contrasena="***"
+                    )
             elif eleccion == "2":
-                if desplegar_registro():
-                    print("Mandar al menu de tareas")
+                desplegar_registro()
             elif eleccion == "3":
                 logging.info("Se ha salido del autenticador de cuentas.")
                 break

@@ -234,6 +234,7 @@ def main(cuenta):
 if __name__ == "__main__":
     cuenta = Cuenta(
         usuario="Test",
-        nombre="Testing_c"
+        nombre="Testing_c",
+        contrasena="***"
     )
     main(cuenta)

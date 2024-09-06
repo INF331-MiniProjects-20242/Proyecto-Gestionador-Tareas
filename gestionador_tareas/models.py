@@ -66,7 +66,6 @@ class Cuenta:
     nombre: str
     contrasena: str
 
-
     def __init__(self, usuario: str, nombre: str, contrasena: str):
         self.usuario = usuario
         self.nombre = nombre
