@@ -2,7 +2,8 @@ import datetime
 import logging
 from models import Cuenta
 from etiquetas import *
-from archivador import cargar_tareas, cargar_tareas_archivadas
+from archivador import cargar_tareas_archivadas
+from gestionador import cargar_tareas
 
 # Configuracion de logging
 logging.basicConfig(filename="app.log", filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
