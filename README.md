@@ -6,14 +6,18 @@ Software para la gestión de tareas realizado en Python que permite a los usuari
 
 Antes de ejecutar el programa, se debe considerar tener instalado Python y la libreria bycript, esta pudiendo ser instalada desde la terminal ejecutando el siguiente comando:
 
-* **pip install bcrypt**
+```
+pip install bcrypt
+```
 
 Ahora bien, para el correcto funcionamiento del programa tenga en consideración seguir los siguientes pasos:
 
 1. Asegúrate de que todos los archivos del programa (app.py, models.py, autenticador.py, etc.) presentes en la carpeta del repositorio "gestionador_tareas" se encuentren en la misma ubicacion.
 2. Abre una terminal en la carpeta donde están los archivos.
 3. Ejecuta el siguiente comando:
-    python app.py
+```
+python app.py 
+```
 
 ## Cómo usar:
 
@@ -21,17 +25,19 @@ El programa se utiliza a través de la línea de comandos, por lo tanto, una vez
 
 ## Cómo contribuir:
 
-Para contribuir a este proyecto, puedes comunicarte con nosotros para proporcionarte acceso y permisos, luego sigue estos pasos:
+Para contribuir a este proyecto, puedes seguir los siguientes pasos:
 
-* Crea una rama nueva: Si deseas agregar una nueva funcionalidad, crea una nueva rama basada en la rama develop utilizando nombres descriptivos.
+* Crea un fork: Crea un fork del repositorio completo a tu cuenta personal.
 
-* Desarrolla la funcionalidad: Realiza los cambios y asegúrate de probar el código para verificar que todo funcione correctamente.
+* Crea una rama nueva: En tu fork, a partir de la rama ```develop``` crea una nueva rama donde puedas desarrollar la nueva funcionalidad que deseas implementar.
 
-* Haz un pull request a develop: Cuando termines tu trabajo, crea un pull request desde tu rama hacia develop. El pull request necesitará ser revisado por al menos un desarrollador del equipo.
+* Desarrolla la funcionalidad: Realiza los cambios necesarios y asegúrate de probar el código para verificar que todo funcione correctamente.
 
-* Integración a main: Si tu pull request es aprobado y los cambios funcionan correctamente, puedes hacer un pull request desde develop a main para integrarlos a la rama principal.
+* Crea un pull request a develop: Cuando termines tu trabajo, crea un pull request desde tu fork hacia la rama ```develop``` de este repositorio. (El pull request será revisado por al menos un revisor)
 
-Asegúrate de mantener una buena descripción de los cambios que estás proponiendo en el pull request y explica el propósito de las modificaciones realizadas.
+* Integración a main: Si tu pull request es aprobado y los cambios funcionan correctamente, se integrará a la rama principal (```main```).
+
+Asegúrate de incluir una buena descripción de los cambios propuestos y explica explica el propósito de las modificaciones realizadas en el pull request.
 
 ## Licencia:
 
