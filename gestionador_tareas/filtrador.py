@@ -137,10 +137,15 @@ def main(cuenta):
             else:
                 print("Estado invalido, intenta nuevamente")
         elif eleccion == "5":
-            titulo = input("Ingresa el titulo o parte del titulo de la tarea a buscar: ")
-            tareas_filtradas = filtrar_por_titulo(tareas, indices_tareas, titulo)
-            tareas_filtradas_archivadas = filtrar_por_titulo(tareas_archivadas, indices_archivados, titulo)
-            mostrar_tareas(tareas_filtradas + tareas_filtradas_archivadas)
+            while True:
+                titulo = input("Ingresa el titulo o parte del titulo de la tarea a buscar: ")
+                if titulo == "":
+                    print("Debes escribir un titulo!! Intente nuevamente")
+                else:
+                    tareas_filtradas = filtrar_por_titulo(tareas, indices_tareas, titulo)
+                    tareas_filtradas_archivadas = filtrar_por_titulo(tareas_archivadas, indices_archivados, titulo)
+                    mostrar_tareas(tareas_filtradas + tareas_filtradas_archivadas)
+                    break
         elif eleccion == "6":
             logging.info(f"El usuario {cuenta.usuario} ha salido del filtrador de tareas")
             break

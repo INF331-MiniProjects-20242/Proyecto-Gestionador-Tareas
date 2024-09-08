@@ -56,6 +56,8 @@ def crear_tarea(usuario):
             titulo = input("Ingrese el titulo de la tarea: ")
             if len(titulo) > 50:
                 print("El titulo debe contener a lo mas 50 caracteres, intenta nuevamente")
+            elif len(titulo) == 0:
+                print("El titulo debe contener al menos 1 caracter, intenta nuevamente")
             else:
                 break
         # Verificacion de descripcion para que no exceda los 200 caracteres
@@ -63,6 +65,8 @@ def crear_tarea(usuario):
             descr = input("Ingrese la descripcion de la tarea: ")
             if len(descr) > 200:
                 print("La descripcion debe contener a los mas 200 caracteres, intenta nuevamente")
+            elif len(descr) == 0:
+                print("La descripcion debe contener al menos 1 caracter, intenta nuevamente")
             else:
                 break
 
