@@ -60,12 +60,18 @@ def desplegar_registro():
     try:
         print("\n--- Creacion de Cuenta ---")
 
-        print("Escriba su nombre: ")
-        nombre = input()
+        while True:
+            print("Escriba su nombre (Al menos 2 caracteres): ")
+            nombre = input()
+            if len(nombre) < 2:
+                print("Su nombre debe contener al menos 2 caracteres!, intente nuevamente")
+            else:
+                break
 
         no_unico = True
-        while no_unico:
-            print("Escriba un usuario unico: ")
+        minimo = True #Flag para que tenga caracteres el usuario
+        while no_unico and minimo:
+            print("Escriba un usuario unico (Al menos 2 caracteres): ")
             usuario = input()
             no_unico = existe_usuario(usuario)
 
@@ -73,15 +79,29 @@ def desplegar_registro():
                 #El usuario escribio un nombre ya utilizado por otro
                 print("El usuario escrito ya existe en el sistema!")
                 print("Intenta con otro porfavor!\n")
+            else:
+                #Se verifica si el usuario escrito no esta vacio
+                if len(usuario) < 2:
+                    print("Su usuario debe contener al menos 2 caracteres!, intente nuevamente")
+                    no_unico = True
+                    minimo = True
+                else:
+                    # El minimo de caracteres y usuario unico se cumple, entonces se sale del while
+                    minimo = False
 
-        print("Escriba una contraseña: ")
-        contrasena = input()
+        while True:
+            print("Escriba una contraseña (Al menos 2 caracteres): ")
+            contrasena = input()
+            if len(contrasena) < 2:
+                print("Su contraseña debe contener al menos 2 caracteres!, intente nuevamente")
+            else:
+                break
 
         crear_cuenta(usuario, nombre, contrasena)
         print("La cuenta ha sido creada con exito!")
     except Exception as e:
         print(f"Error durante el registro: {e}")
-        logging.error(f"Error durante el despliegue registro: {e}", "Error")
+        logging.error(f"Error durante el despliegue registro: {e}")
 
 
 def desplegar_login():
@@ -99,7 +119,7 @@ def desplegar_login():
             print("Usuario o contraseña equivocados, regresando al menu...")
     except Exception as e:
         print(f"Error durante el login: {e}")
-        logging.error(f"Error durante el despliegue del login: {e}", "Error")
+        logging.error(f"Error durante el despliegue del login: {e}")
     return False
 
 def main():
@@ -133,7 +153,7 @@ def main():
                 print("No existe tal accion!")
         except Exception as e:
             print(f"Error durante el Menu de inicio: {e}")
-            logging.error(f"Error durante el Menu de inicio: {e}", "Error")
+            logging.error(f"Error durante el Menu de inicio: {e}")
 
 if __name__ == "__main__":
     main()
